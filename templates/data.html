@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+    <h1 class="ui center aligned header">Book Liberery</h1>
+  <form class="ui form" action="/add" method="post">
+    <div class="field">
+        <label>book Title</label>
+        <input type="text" name="title" placeholder="Enter book title..."><br>
+        <label>Author name</label>
+        <input type="text" name="author" placeholder="author name..."><br>
+        
+    </div>
+    <button class="ui blue button" type="submit">Add</button>
+    
+
+</form>
+
+
+  <table id="data"  class="content-table">
+    <thead>
+      <tr>
+        <th>sno</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    
+      <tbody>
+      <tr>
+        {% for book in book_details %}
+        <td>{{ book.id }}</td>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>
+          {% if book.complete == False %}
+            <span class="ui gray label">Not booked</span>
+            {% else %}
+            <span class="ui green label">booked</span>
+            {% endif %}
+
+            <a class="ui blue button" href="/update/{{ book.id }}">book</a>
+            <a class="ui red button" href="/delete/{{ book.id }}">Delete</a>
+            
+        </td> 
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+
+  {% endblock %}
+
+
+
+  {% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        ajax: '/api/data',
+        columns: [
+          {data: 'id'},
+          {data: 'title', searchable: false},
+          {data: 'author', orderable: false, searchable: false},
+          {data: 'complete', orderable: false, searchable: false}
+        ],
+      });
+    });
+  </script>
+{% endblock %}
+
